@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -83,8 +84,16 @@ var vsCmd = &cobra.Command{
 		}
 		fmt.Println()
 
-		// Attempt to fetch deployments if inside a Vercel project (--yes prevents prompt)
-		outDeploy, _ := exec.Command("vercel", "ls", "--yes").CombinedOutput()
+		// Attempt to fetch deployments from a temp directory to avoid creating .vercel folder
+		tmpDir, err := os.MkdirTemp("", "vercel-hellogang-*")
+		if err == nil {
+			defer os.RemoveAll(tmpDir)
+		}
+		cmdDeploy := exec.Command("vercel", "ls", "--yes")
+		if err == nil {
+			cmdDeploy.Dir = tmpDir
+		}
+		outDeploy, _ := cmdDeploy.CombinedOutput()
 		dLines := strings.Split(string(outDeploy), "\n")
 		hasDeploys := false
 		for _, rawLine := range dLines {

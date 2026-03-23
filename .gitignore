@@ -12,6 +12,5 @@ hellogang-*
 Thumbs.db
 
 .vercel
-.github
 *.json
 *.txt
