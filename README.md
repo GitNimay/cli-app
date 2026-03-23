@@ -49,4 +49,4 @@ hellogang uninstall
 ```
 
 ---
-*Built with [Cobra](https://github.com/spf13/cobra) and [Bubbletea/Lipgloss](https://github.com/charmbracelet/lipgloss) 💜*
+*Built with [Cobra](https://github.com/spf13/cobra) and [Bubbletea/Lipgloss](https://github.com/charmbracelet/lipgloss) *
