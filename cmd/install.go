@@ -91,14 +91,28 @@ a new terminal session. Supports PowerShell, CMD, and Git Bash.`,
 		}
 
 		if runtime.GOOS == "windows" {
-			fmt.Print("\nWould you like to run HelloGang as a startup application? [y/N]: ")
-			input, _ := reader.ReadString('\n')
-			input = strings.TrimSpace(strings.ToLower(input))
-			if input == "y" || input == "yes" {
-				if err := install.InstallStartupApp(install.InstallOptions{
-					Force: installForce,
-				}); err != nil {
-					fmt.Printf("⚠️  Could not add to startup: %v\n", err)
+			// For CMD, also add to Windows Startup because CMD AutoRun is unreliable
+			if shell == install.ShellCMD {
+				fmt.Print("\n⚡ Adding to Windows Startup for reliable CMD support? [Y/n]: ")
+				input, _ := reader.ReadString('\n')
+				input = strings.TrimSpace(strings.ToLower(input))
+				if input != "n" && input != "no" {
+					if err := install.InstallStartupApp(install.InstallOptions{
+						Force: installForce,
+					}); err != nil {
+						fmt.Printf("⚠️  Could not add to startup: %v\n", err)
+					}
+				}
+			} else {
+				fmt.Print("\nWould you like to run HelloGang as a startup application? [y/N]: ")
+				input, _ := reader.ReadString('\n')
+				input = strings.TrimSpace(strings.ToLower(input))
+				if input == "y" || input == "yes" {
+					if err := install.InstallStartupApp(install.InstallOptions{
+						Force: installForce,
+					}); err != nil {
+						fmt.Printf("⚠️  Could not add to startup: %v\n", err)
+					}
 				}
 			}
 		}

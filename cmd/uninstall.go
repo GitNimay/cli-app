@@ -47,10 +47,15 @@ This undoes what the 'install' command set up.`,
 
 		if runtime.GOOS == "windows" {
 			reader := bufio.NewReader(os.Stdin)
-			fmt.Print("\nWould you also like to remove HelloGang from Windows startup? [y/N]: ")
+			// For CMD, always prompt about startup removal since we added it automatically
+			if shell == install.ShellCMD {
+				fmt.Print("\nWould you also like to remove HelloGang from Windows startup? [Y/n]: ")
+			} else {
+				fmt.Print("\nWould you also like to remove HelloGang from Windows startup? [y/N]: ")
+			}
 			input, _ := reader.ReadString('\n')
 			input = strings.TrimSpace(strings.ToLower(input))
-			if input == "y" || input == "yes" {
+			if input != "n" && input != "no" {
 				if err := install.UninstallStartupApp(install.InstallOptions{}); err != nil {
 					fmt.Printf("⚠️  Could not remove from startup: %v\n", err)
 				}
